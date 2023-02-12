@@ -2,7 +2,7 @@ package form
 
 // ListRequest 接收数据
 type ListRequest struct {
-	Path string `form:"path" json:"path" validate:"required"`
+	Path string `form:"path" json:"path"`
 }
 
 // ListResponse 响应数据
