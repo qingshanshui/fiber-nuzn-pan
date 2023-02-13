@@ -19,3 +19,11 @@ func (t *Default) GetList(list form.ListRequest) ([]form.ListResponse, error) {
 	}
 	return data, nil
 }
+
+func (t *Default) GetFile(list form.GetRequest) ([]form.GetResponse, error) {
+	data, err := utils.GetDirFile(list.Path)
+	if err != nil {
+		return data, err
+	}
+	return data, nil
+}
