@@ -6,6 +6,7 @@ import (
 	"fiber-layout/service"
 	"fiber-layout/validator"
 	"fiber-layout/validator/form"
+
 	"github.com/gofiber/fiber/v2"
 )
 
@@ -21,7 +22,7 @@ func (t *DefaultController) List(c *fiber.Ctx) error {
 	// 初始化参数结构体
 	ListRequestForm := form.ListRequest{}
 	// 绑定参数并使用验证器验证参数
-	if err := validator.CheckQueryParams(c, &ListRequestForm); err != nil {
+	if err := validator.CheckPostParams(c, &ListRequestForm); err != nil {
 		return err
 	}
 	// 实际业务调用
