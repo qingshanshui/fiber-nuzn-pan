@@ -32,3 +32,9 @@ type GetResponse struct {
 type DownloadRequest struct {
 	Path string `form:"path" json:"path"`
 }
+
+// LoginRequest 登录
+type LoginRequest struct {
+	Username string `form:"username" json:"username"`
+	Password string `form:"password" json:"password"`
+}

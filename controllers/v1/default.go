@@ -65,3 +65,16 @@ func (t *DefaultController) Download(c *fiber.Ctx) error {
 	url := pwd + "/static" + DownloadRequestForm.Path
 	return c.SendFile(url)
 }
+func (t *DefaultController) Login(c *fiber.Ctx) error {
+	// 初始化参数结构体
+	DownloadRequestForm := form.LoginRequest{}
+	// 绑定参数并使用验证器验证参数
+	if err := validator.CheckPostParams(c, &DownloadRequestForm); err != nil {
+		return err
+	}
+	api, err := service.NewDefaultService().Login(DownloadRequestForm)
+	if err != nil {
+		return c.JSON(t.Fail(err))
+	}
+	return c.JSON(t.Ok(api)) // => ✋ register
+}

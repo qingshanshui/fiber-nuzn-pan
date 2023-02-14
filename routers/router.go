@@ -12,4 +12,5 @@ func SetRoute(app *fiber.App) {
 	group.Post("/list", main.List)        // 获取文件列表
 	group.Post("/get", main.Get)          // 获取文件信息
 	group.Get("/download", main.Download) // 下载文件
+	group.Post("/login", main.Login)      // 登录获取token
 }
