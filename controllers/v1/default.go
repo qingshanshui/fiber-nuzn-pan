@@ -3,10 +3,12 @@ package v1
 import (
 	"fiber-layout/controllers"
 	"fiber-layout/initalize"
+	"fiber-layout/pkg/utils"
 	"fiber-layout/service"
 	"fiber-layout/validator"
 	"fiber-layout/validator/form"
 	"os"
+	"path"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -77,4 +79,24 @@ func (t *DefaultController) Login(c *fiber.Ctx) error {
 		return c.JSON(t.Fail(err))
 	}
 	return c.JSON(t.Ok(api)) // => ✋ register
+}
+
+func (t *DefaultController) Upload(c *fiber.Ctx) error {
+	// 接收文件file
+	file, err := c.FormFile("file")
+	if err != nil {
+		return c.JSON(t.Fail(err))
+	}
+	// 获取文件后缀
+	extName := path.Ext(file.Filename)
+	// 拼接文件路径
+	err, pathDir := utils.Mkdir(extName, "")
+	if err != nil {
+		return c.JSON(t.Fail("创建文件路径失败"))
+	}
+	// 保存文件
+	if err := c.SaveFile(file, pathDir); err != nil {
+		return c.JSON(t.Fail("文件保存失败"))
+	}
+	return c.JSON(t.Ok(pathDir))
 }
