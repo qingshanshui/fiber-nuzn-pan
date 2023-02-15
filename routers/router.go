@@ -2,6 +2,7 @@ package routers
 
 import (
 	v1 "fiber-layout/controllers/v1"
+	"fiber-layout/middleware"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -13,5 +14,6 @@ func SetRoute(app *fiber.App) {
 	group.Post("/get", main.Get)          // 获取文件信息
 	group.Get("/download", main.Download) // 下载文件
 	group.Post("/login", main.Login)      // 登录获取token
-	group.Post("/upload", main.Upload)    // 上传文件
+	group.Use(middleware.Auth)
+	group.Post("/upload", main.Upload) // 上传文件
 }

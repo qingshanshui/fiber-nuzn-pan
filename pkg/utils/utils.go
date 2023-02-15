@@ -31,3 +31,9 @@ func GetDay() string {
 func GetUnixNano() int64 {
 	return time.Now().UnixNano()
 }
+
+// GetFileDay 获取当前年/月/日
+func GetFileDay() string {
+	template := "2006/01/02"
+	return time.Now().Format(template)
+}

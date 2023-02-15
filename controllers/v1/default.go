@@ -7,10 +7,8 @@ import (
 	"fiber-layout/service"
 	"fiber-layout/validator"
 	"fiber-layout/validator/form"
-	"os"
-	"path"
-
 	"github.com/gofiber/fiber/v2"
+	"os"
 )
 
 type DefaultController struct {
@@ -87,10 +85,10 @@ func (t *DefaultController) Upload(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(t.Fail(err))
 	}
-	// 获取文件后缀
-	extName := path.Ext(file.Filename)
+	//// 获取文件后缀
+	//extName := path.Ext(file.Filename)
 	// 拼接文件路径
-	err, pathDir := utils.Mkdir(extName, "")
+	err, pathDir := utils.Mkdir(file.Filename, "")
 	if err != nil {
 		return c.JSON(t.Fail("创建文件路径失败"))
 	}

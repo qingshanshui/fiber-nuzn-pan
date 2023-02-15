@@ -108,14 +108,15 @@ route：设置特定目录后缀
 */
 
 func Mkdir(extName, route string) (error, string) {
+	pwd, _ := os.Getwd()
 	// 组成 文件路径
-	dir := "static/upload/" + GetDay() + route
+	dir := pwd + "/static/upload/" + GetFileDay() + route
 	// 创建文件路径
 	if err := os.MkdirAll(dir, 0666); err != nil {
 		return err, ""
 	}
 	//生成文件名称   144325235235.png
 	fileUnixName := strconv.FormatInt(GetUnixNano(), 10)
-	saveDir := path.Join(dir, fileUnixName+extName)
+	saveDir := path.Join(dir, fileUnixName+"--"+extName)
 	return nil, saveDir
 }

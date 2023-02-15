@@ -1,20 +1,29 @@
 package middleware
 
 import (
-	"fmt"
+	"fiber-layout/pkg/utils"
 	"github.com/gofiber/fiber/v2"
-	"strings"
+	"github.com/spf13/viper"
 )
 
-func Disable(ctx *fiber.Ctx) error {
-	fmt.Println(ctx.Path())
-	if strings.Index(ctx.Path(), "list") == -1 {
+func Auth(ctx *fiber.Ctx) error {
+	token := ctx.Get("Authorization")
+	if token == "" {
 		return ctx.JSON(fiber.Map{
 			"code": 0,
-			"data": "主体数据，不能变动",
+			"data": "权限不足，禁止操作",
 			"msg":  "操作失败",
 		})
 	} else {
-		return ctx.Next()
+		_, err := utils.ParseToken(token, viper.GetString("Jwt.Secret"))
+		if err != nil {
+			return ctx.JSON(fiber.Map{
+				"code": 0,
+				"data": "权限不足，禁止操作",
+				"msg":  "操作失败",
+			})
+		} else {
+			return ctx.Next()
+		}
 	}
 }
