@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fiber-layout/pkg/utils"
 	"fiber-layout/validator/form"
+
 	"github.com/spf13/viper"
 )
 
@@ -15,7 +16,7 @@ func NewDefaultService() *Default {
 }
 
 func (t *Default) GetList(list form.ListRequest) ([]form.ListResponse, error) {
-	data, err := utils.GetDirData(list.Path)
+	data, err := utils.GetDirDataList(list.Path)
 	if err != nil {
 		return nil, err
 	}

@@ -11,7 +11,7 @@ import (
 )
 
 // GetDirData 获取目录下文件/文件夹
-func GetDirData(path string) ([]form.ListResponse, error) {
+func GetDirDataList(path string) ([]form.ListResponse, error) {
 	var l []form.ListResponse
 	pwd, _ := os.Getwd()
 	url := pwd + "/static" + path
