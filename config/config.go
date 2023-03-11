@@ -3,14 +3,16 @@ package config
 import (
 	"flag"
 	"fmt"
+	"os"
+
 	"github.com/fsnotify/fsnotify"
 	"github.com/spf13/viper"
-	"os"
 )
 
 func init() {
 	var mode string
-	flag.StringVar(&mode, "mode", "dev", "开发dev，生产prod")
+	// flag.StringVar(&mode, "mode", "dev", "开发dev，生产prod") // 开发环境
+	flag.StringVar(&mode, "mode", "prod", "开发dev，生产prod") // 生产环境
 	flag.Parse()
 	workDir, _ := os.Getwd()
 	viper.SetConfigName("config." + mode)    // 配置文件名称

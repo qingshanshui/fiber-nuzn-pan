@@ -31,11 +31,10 @@ func (t *DefaultController) GetList(c *fiber.Ctx) error {
 	// 实际业务调用
 	api, err := service.NewDefaultService().GetList(ListRequestForm)
 	if err != nil {
+		initalize.Log.Info(err)
 		return c.JSON(t.Fail(err))
 	}
-	initalize.Log.Info(api)
-
-	return c.JSON(t.Ok(api)) // => ✋ register
+	return c.JSON(t.Ok(api))
 }
 
 func (t *DefaultController) GetFile(c *fiber.Ctx) error {
@@ -48,11 +47,10 @@ func (t *DefaultController) GetFile(c *fiber.Ctx) error {
 	// 实际业务调用
 	api, err := service.NewDefaultService().GetFile(GetRequestForm)
 	if err != nil {
+		initalize.Log.Info(err)
 		return c.JSON(t.Fail(err))
 	}
-	initalize.Log.Info(api)
-
-	return c.JSON(t.Ok(api)) // => ✋ register
+	return c.JSON(t.Ok(api))
 }
 
 func (t *DefaultController) Download(c *fiber.Ctx) error {
@@ -84,7 +82,7 @@ func (t *DefaultController) Login(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(t.Fail(err))
 	}
-	return c.JSON(t.Ok(api)) // => ✋ register
+	return c.JSON(t.Ok(api))
 }
 
 func (t *DefaultController) Upload(c *fiber.Ctx) error {
