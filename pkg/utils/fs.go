@@ -120,3 +120,22 @@ func Mkdir(extName, route string) (error, string) {
 	saveDir := path.Join(dir, fileUnixName+"--"+extName)
 	return nil, saveDir
 }
+
+/**
+创建文件夹/文件名
+extName：文件后缀
+route：设置特定目录后缀
+返回值：bool,路径
+*/
+
+func MkdirInfo(extName, route string) (error, string) {
+	pwd, _ := os.Getwd()
+	// 组成 文件路径
+	dir := pwd + "/static" + route
+	// 创建文件路径
+	if err := os.MkdirAll(dir, 0666); err != nil {
+		return err, ""
+	}
+	saveDir := path.Join(dir, extName)
+	return nil, saveDir
+}

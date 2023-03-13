@@ -8,6 +8,7 @@ import (
 	"fiber-layout/service"
 	"fiber-layout/validator"
 	"fiber-layout/validator/form"
+	"fmt"
 	"os"
 
 	"github.com/gofiber/fiber/v2"
@@ -91,13 +92,28 @@ func (t *DefaultController) Upload(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(t.Fail(err))
 	}
-	//// 获取文件后缀
-	//extName := path.Ext(file.Filename)
-	// 拼接文件路径
-	err, pathDir := utils.Mkdir(file.Filename, "")
-	if err != nil {
-		return c.JSON(t.Fail(err))
+	fmt.Println(c.Query("type"), "type-------")
+	if c.Query("type") == "1" && c.Query("type") == "2" {
+		return c.JSON(t.Fail(errors.New("参数错误")))
 	}
+	var pathDir = ""
+	//  api上传
+	if c.Query("type") == "1" {
+		// 拼接文件路径
+		err, pathDir = utils.Mkdir(file.Filename, "")
+		if err != nil {
+			return c.JSON(t.Fail(err))
+		}
+	}
+	// 上传到当前目录
+	if c.Query("type") == "2" {
+		// 拼接文件路径
+		err, pathDir = utils.MkdirInfo(file.Filename, c.Query("url"))
+		if err != nil {
+			return c.JSON(t.Fail(err))
+		}
+	}
+
 	// 保存文件
 	if err := c.SaveFile(file, pathDir); err != nil {
 		return c.JSON(t.Fail(err))
