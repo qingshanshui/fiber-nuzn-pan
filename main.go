@@ -2,7 +2,9 @@ package main
 
 import (
 	_ "fiber-layout/config"
+	"fiber-layout/initalize"
 	_ "fiber-layout/initalize"
+	"fiber-layout/models"
 	"fiber-layout/routers"
 
 	"github.com/gofiber/fiber/v2"
@@ -24,6 +26,12 @@ func main() {
 	app.Use(recover.New())
 	// 设置路由
 	routers.SetRoute(app)
+	// 初始化 数据表
+	initalize.DB.Set("gorm:table_options", "ENGINE=InnoDB").AutoMigrate(&models.FileInfo{})
+	// AutoErr := initalize.DB.AutoMigrate(models.NewFileInfo())
+	// if AutoErr != nil {
+	// 	fmt.Println("mysql迁移表失败")
+	// }
 	// 监听端口
 	_ = app.Listen(viper.GetString("App.Port"))
 }

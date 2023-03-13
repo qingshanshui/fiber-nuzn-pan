@@ -4,12 +4,13 @@ import (
 	"errors"
 	"fiber-layout/controllers"
 	"fiber-layout/initalize"
+	"fiber-layout/models"
 	"fiber-layout/pkg/utils"
 	"fiber-layout/service"
 	"fiber-layout/validator"
 	"fiber-layout/validator/form"
-	"fmt"
 	"os"
+	"time"
 
 	"github.com/gofiber/fiber/v2"
 )
@@ -92,15 +93,28 @@ func (t *DefaultController) Upload(c *fiber.Ctx) error {
 	if err != nil {
 		return c.JSON(t.Fail(err))
 	}
-	fmt.Println(c.Query("type"), "type-------")
+	// 获取md5 值
+	md5 := utils.GetFileMd5(file)
+	// 查 md5 是否存在库
+	fi := models.NewFileInfo()
+	FileInfos, err := fi.Md5Verify(md5)
+	if err != nil {
+		return c.JSON(t.Fail(err))
+	}
+	if len(FileInfos) != 0 {
+		return c.JSON(t.Ok(FileInfos))
+	}
+
 	if c.Query("type") == "1" && c.Query("type") == "2" {
 		return c.JSON(t.Fail(errors.New("参数错误")))
 	}
-	var pathDir = ""
+	var pathDir = ""  // 文件路径
+	var FileName = "" //文件名
+
 	//  api上传
 	if c.Query("type") == "1" {
 		// 拼接文件路径
-		err, pathDir = utils.Mkdir(file.Filename, "")
+		err, pathDir, FileName = utils.Mkdir(file.Filename, "")
 		if err != nil {
 			return c.JSON(t.Fail(err))
 		}
@@ -108,7 +122,7 @@ func (t *DefaultController) Upload(c *fiber.Ctx) error {
 	// 上传到当前目录
 	if c.Query("type") == "2" {
 		// 拼接文件路径
-		err, pathDir = utils.MkdirInfo(file.Filename, c.Query("url"))
+		err, pathDir, FileName = utils.MkdirInfo(file.Filename, c.Query("url"))
 		if err != nil {
 			return c.JSON(t.Fail(err))
 		}
@@ -116,6 +130,14 @@ func (t *DefaultController) Upload(c *fiber.Ctx) error {
 
 	// 保存文件
 	if err := c.SaveFile(file, pathDir); err != nil {
+		return c.JSON(t.Fail(err))
+	}
+	fi.CreatedAt = time.Now()
+	fi.Md5 = md5
+	fi.Name = FileName
+	fi.Path = pathDir
+	fi.Size = int(file.Size)
+	if err := fi.Create(); err != nil {
 		return c.JSON(t.Fail(err))
 	}
 	return c.JSON(t.Ok(pathDir))

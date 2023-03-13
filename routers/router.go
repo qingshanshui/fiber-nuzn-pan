@@ -18,4 +18,5 @@ func SetRoute(app *fiber.App) {
 	// 以下接口需要权限
 	group.Use(middleware.Auth)
 	group.Post("/upload", main.Upload) // 上传文件
+
 }

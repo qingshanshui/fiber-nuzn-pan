@@ -1,10 +1,13 @@
 package utils
 
 import (
+	"crypto/md5"
 	"fiber-layout/validator/form"
 	"fmt"
+	"io"
 	"io/ioutil"
 	"log"
+	"mime/multipart"
 	"os"
 	"path"
 	"strconv"
@@ -107,18 +110,18 @@ route：设置特定目录后缀
 返回值：bool,路径
 */
 
-func Mkdir(extName, route string) (error, string) {
+func Mkdir(extName, route string) (error, string, string) {
 	pwd, _ := os.Getwd()
 	// 组成 文件路径
 	dir := pwd + "/static/upload/" + GetFileDay() + route
 	// 创建文件路径
 	if err := os.MkdirAll(dir, 0666); err != nil {
-		return err, ""
+		return err, "", ""
 	}
 	//生成文件名称   144325235235.png
 	fileUnixName := strconv.FormatInt(GetUnixNano(), 10)
 	saveDir := path.Join(dir, fileUnixName+"--"+extName)
-	return nil, saveDir
+	return nil, saveDir, fileUnixName + "--" + extName
 }
 
 /**
@@ -128,14 +131,23 @@ route：设置特定目录后缀
 返回值：bool,路径
 */
 
-func MkdirInfo(extName, route string) (error, string) {
+func MkdirInfo(extName, route string) (error, string, string) {
 	pwd, _ := os.Getwd()
 	// 组成 文件路径
 	dir := pwd + "/static" + route
 	// 创建文件路径
 	if err := os.MkdirAll(dir, 0666); err != nil {
-		return err, ""
+		return err, "", ""
 	}
 	saveDir := path.Join(dir, extName)
-	return nil, saveDir
+	return nil, saveDir, extName
+}
+
+// 获取文件md5
+func GetFileMd5(file *multipart.FileHeader) string {
+	md5hash := md5.New()
+	f, _ := file.Open()
+	io.Copy(md5hash, f)
+	has := md5hash.Sum(nil)
+	return fmt.Sprintf("%x", has)
 }

@@ -2,6 +2,7 @@ package initalize
 
 import (
 	"fiber-layout/pkg/utils"
+
 	"github.com/spf13/viper"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -28,4 +29,5 @@ func InitDatabaseMysql() {
 		panic("mysql数据库链接失败gorm")
 	}
 	DB = db
+
 }
